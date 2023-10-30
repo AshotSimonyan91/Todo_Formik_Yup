@@ -1,14 +1,16 @@
 import {ErrorMessage, Field, Formik, Form} from "formik";
 import * as Yup from "yup";
 import './form.css';
-import {addTodo} from "../slice/Slice";
-import {useDispatch} from "react-redux";
-import Service from "../service/service";
+import {useMutation} from "@apollo/client";
+import {addTodo, query} from "../schema";
 
 const CustomForm = () => {
 
-    const dispatch = useDispatch();
-
+    const [creatTodo] = useMutation(addTodo, {
+        refetchQueries: [
+            query
+        ],
+    });
 
     return (
         <Formik
@@ -21,19 +23,14 @@ const CustomForm = () => {
                     .required('Required'),
             })}
             onSubmit={values => {
-                Service(`mutation PutTodo($name: String) {
-                          putTodo(name: $name) {
-                            id
-                            name
-                          }
-                       }`,{"name": values.todo})
-                    .then(res => {
-                    dispatch(addTodo(res.data.todos))
+                creatTodo({
+                    variables: {
+                        todo: values.todo,
+                    }
                 })
-
             }}
         >
-            <Form className="container border">
+            <Form className="form border form">
                 <h2>Todo</h2>
                 <label htmlFor="todo"></label>
                 <Field
@@ -41,8 +38,8 @@ const CustomForm = () => {
                     name="todo"
                     type="input"
                 />
-                <ErrorMessage name='todo' className='error' component='div'/>
                 <button className="btn btn-outline-primary" type="submit">Отправить</button>
+                <ErrorMessage name='todo' className='error' component='div'/>
             </Form>
         </Formik>
     )

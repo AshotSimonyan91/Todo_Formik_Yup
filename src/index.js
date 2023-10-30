@@ -1,19 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import {configureStore} from "@reduxjs/toolkit";
-import Slice from "./slice/Slice";
-import {Provider} from "react-redux";
+import {ApolloClient, ApolloProvider, InMemoryCache} from "@apollo/client";
 
-const store = configureStore({
-    reducer: Slice.reducer
-})
+const client = new ApolloClient({
+    uri: 'http://localhost:8080/graphql',
+    fetchOptions: {
+        mode: 'no-cors'
+    },
+    cache: new InMemoryCache(),
+});
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
-        <Provider store={store}>
+        <ApolloProvider client={client}>
             <App/>
-        </Provider>
+        </ApolloProvider>
     </React.StrictMode>
 );

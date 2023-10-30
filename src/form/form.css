@@ -3,6 +3,14 @@
 .form > h2 {
     font-size: 60px;
 }
+.form > input {
+    width: 50%;
+    height: 38px;
+    margin-top: 3px;
+    padding-bottom: 3px;
+    border-radius: 5px;
+    border: 1px solid #a09f9f;
+}
 
 .error {
     color: red;
